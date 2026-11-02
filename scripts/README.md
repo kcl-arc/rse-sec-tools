@@ -57,15 +57,19 @@ cutoff. Hidden entries (dot-directories such as `.git`, and dotfiles) are
 skipped by default, so an actively-committed-but-untouched project still
 counts as stale; `--include-hidden` counts them. Only the topmost directory
 of each stale branch is reported, since children of a stale directory are
-stale by definition. Results are ordered newest change first, so the
-longest-neglected branches come last, and only for `--depth` levels
-below the scan point (default 3) — deeper stale branches are counted in
-the summary but not listed.
+stale by definition. Each line also shows the apparent size of the files
+the result stands for (its whole subtree). Results are ordered newest
+change first, so the longest-neglected branches come last, or smallest
+first with `--sort size`, so the largest stale branch is the last thing
+read — and only the first `--depth` levels
+below the scan point (default 3) are listed; deeper stale branches are
+counted in the summary but not listed.
 
 ```bash
 python3 scripts/stale_dirs.py /path/to/scan --days 365
 python3 scripts/stale_dirs.py -x node_modules -x .venv   # default root: $HOME
 python3 scripts/stale_dirs.py --depth 5                  # list deeper branches
+python3 scripts/stale_dirs.py --sort size                # largest stale branch listed last
 python3 scripts/stale_dirs.py --json                    # JSON Lines on stdout
 python3 scripts/stale_dirs.py . --include-hidden        # count .git etc.
 ```
