@@ -22,7 +22,7 @@ import subprocess
 import sys
 import urllib.request
 from collections import Counter
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 LIFECYCLE_URL = "https://endoflife.date/api/python.json"
@@ -74,7 +74,7 @@ def python_version(python, cfg_version, execute=True):
             if python.is_file() and os.access(python, os.X_OK):
                 result = subprocess.run(
                     [str(python), "-I", "-V"],
-                    capture_output=True, text=True, timeout=10,
+                    check=False, capture_output=True, text=True, timeout=10,
                 )
                 if result.returncode == 0 and result.stdout.strip():
                     return result.stdout.strip()
@@ -99,7 +99,7 @@ def iso(ts):
     """UTC ISO-8601 timestamp, second precision."""
     if ts is None:
         return None
-    return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat(timespec="seconds")
+    return datetime.fromtimestamp(ts, tz=UTC).isoformat(timespec="seconds")
 
 
 def venv_times(venv):
@@ -140,7 +140,7 @@ def fetch_lifecycle(timeout=LIFECYCLE_TIMEOUT):
     with urllib.request.urlopen(req, timeout=timeout) as response:
         data = json.load(response)
     if not isinstance(data, list):
-        raise ValueError("unexpected lifecycle response: expected a list")
+        raise ValueError("unexpected lifecycle response: expected a list")  # noqa: TRY004 - fetched JSON shape, not a caller type
     lifecycle = {}
     for entry in data:
         if not isinstance(entry, dict):
@@ -307,7 +307,7 @@ def main():
             lifecycle = fetch_lifecycle()
         except (OSError, ValueError):
             lifecycle = {}
-    today = datetime.now(timezone.utc).date()
+    today = datetime.now(UTC).date()
 
     status_stream = sys.stderr if args.json else sys.stdout
     print(f"Searching for virtual environments under {root}...", file=status_stream)

@@ -80,3 +80,16 @@ python3 scripts/stale_dirs.py --depth 5                  # list deeper branches
 python3 scripts/stale_dirs.py --json                    # JSON Lines on stdout
 python3 scripts/stale_dirs.py . --include-hidden        # count .git etc.
 ```
+
+## Development
+
+uv manages the environment, with a one-week package cooldown
+([cooldowns.dev](https://cooldowns.dev)) configured in `pyproject.toml` via
+uv's `exclude-newer`: releases published within the last week are never
+resolved. `prek` runs ruff as the pre-commit hook:
+
+```bash
+uv sync                      # install dev dependencies (prek)
+uv run prek install          # install the git pre-commit hook (once per clone)
+uv run prek run --all-files  # lint everything now
+```

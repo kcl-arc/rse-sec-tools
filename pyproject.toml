@@ -5,3 +5,14 @@ description = "Small, dependency-free security and development utility scripts."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
+
+[tool.uv]
+# Rolling package cooldown: releases uploaded within the last week are
+# invisible to resolution (uv >= 0.9.17). Exempt a single package with
+# exclude-newer-package = { <name> = false }.
+exclude-newer = "1 week"
+
+[dependency-groups]
+dev = [
+    "prek>=0.5.7",
+]

@@ -23,7 +23,7 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 SECONDS_PER_DAY = 86400
@@ -35,7 +35,7 @@ def is_excluded(path, excludes):
 
 def iso(ts):
     """UTC ISO-8601 timestamp, second precision."""
-    return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat(timespec="seconds")
+    return datetime.fromtimestamp(ts, tz=UTC).isoformat(timespec="seconds")
 
 
 def list_entries(directory, on_error):

@@ -64,7 +64,7 @@ def full_help(files):
         print(f"\n==> {path.stem}")
         done = subprocess.run(
             [sys.executable, str(path), "--help"],
-            capture_output=True, text=True,
+            check=False, capture_output=True, text=True,
         )
         print(done.stdout.strip())
         if done.stderr.strip():
@@ -93,7 +93,7 @@ def main(argv):
               file=sys.stderr)
         return 1
     return subprocess.run(
-        [sys.executable, str(script), *argv[1:]]
+        [sys.executable, str(script), *argv[1:]], check=False
     ).returncode
 
 

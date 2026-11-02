@@ -71,7 +71,7 @@ def pip_show(python, packages, timeout=PIP_TIMEOUT):
     try:
         result = subprocess.run(
             [str(python), "-m", "pip", "show", *packages],
-            capture_output=True, text=True, timeout=timeout,
+            check=False, capture_output=True, text=True, timeout=timeout,
         )
     except (OSError, subprocess.SubprocessError) as exc:
         raise PipError(str(exc))
