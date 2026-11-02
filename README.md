@@ -58,3 +58,25 @@ python3 scripts/check_packages.py . --offline pillow   # skip the PyPI lookup
 
 Interiors of found venvs are not searched, so venvs nested inside other
 venvs are not reported.
+
+## stale_dirs
+
+Finds directories whose contents have not been updated within a threshold
+(default: 1 year): the newest modification time of the directory itself
+or of anything beneath it — symlinks are not followed — is older than the
+cutoff. Hidden entries (dot-directories such as `.git`, and dotfiles) are
+skipped by default, so an actively-committed-but-untouched project still
+counts as stale; `--include-hidden` counts them. Only the topmost directory
+of each stale branch is reported, since children of a stale directory are
+stale by definition. Results are ordered newest change first, so the
+longest-neglected branches come last, and only for `--depth` levels
+below the scan point (default 3) — deeper stale branches are counted in
+the summary but not listed.
+
+```bash
+python3 scripts/stale_dirs.py /path/to/scan --days 365
+python3 scripts/stale_dirs.py -x node_modules -x .venv   # default root: $HOME
+python3 scripts/stale_dirs.py --depth 5                  # list deeper branches
+python3 scripts/stale_dirs.py --json                    # JSON Lines on stdout
+python3 scripts/stale_dirs.py . --include-hidden        # count .git etc.
+```
